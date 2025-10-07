@@ -1,0 +1,100 @@
+{
+  "xsappname": "my_first_bts_app",
+  "description": "My XS Application",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.Display",
+      "description": "A sample scope for my application"
+    },
+    {
+      "name": "$XSAPPNAME.Edit",
+      "description": "A sample scope for modifying data"
+    },
+    {
+      "name": "$XSAPPNAME.Delete",
+      "description": "A sample scope for delete operations"
+    },
+    {
+      "name": "$XSAPPNAME.Viewer",
+      "description": "Viewer"
+    },
+    {
+      "name": "$XSAPPNAME.Editor",
+      "description": "Editor"
+    },
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Admin"
+    }
+  ],
+  "attributes": [
+    {
+      "name": "EmpLevel",
+      "description": "Employee Level",
+      "valueType": "string"
+    },
+    {
+      "name": "DeptName",
+      "description": "DeptName",
+      "valueType": "string"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "Viewer",
+      "description": "Viewer Role",
+      "scope-references": ["$XSAPPNAME.Display"],
+      "attribute-references": [
+        {
+          "name": "EmpLevel",
+          "default-values": []
+        },
+        {
+          "name": "DeptName",
+          "default-values": []
+        }
+      ]
+    },
+    {
+      "name": "Editor",
+      "description": "Editor Role",
+      "scope-references": ["$XSAPPNAME.Display", "$XSAPPNAME.Edit"],
+      "attribute-references": [
+        {
+          "name": "EmpLevel",
+          "default-values": []
+        },
+        {
+          "name": "DeptName",
+          "default-values": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "description": "Admin Role",
+      "scope-references": [
+        "$XSAPPNAME.Display",
+        "$XSAPPNAME.Edit",
+        "$XSAPPNAME.Delete"
+      ],
+      "attribute-references": [
+        {
+          "name": "EmpLevel",
+          "default-values": []
+        },
+        {
+          "name": "DeptName",
+          "default-values": []
+        }
+      ]
+    }
+  ],
+  "authorities": ["$ACCEPT_GRANTED_AUTHORITIES"],
+  "oauth2-configuration": {
+    "token-validity": 900,
+    "redirect-uris": [
+      "https://*.cfapps.us10-001.hana.ondemand.com/login/callback"
+    ]
+  }
+}

@@ -1,0 +1,111 @@
+
+### Get all Employees
+GET http://localhost:4004/odata/v4/employee/Employees
+Authorization: Basic gopi:
+
+### First 10 Employees
+GET http://localhost:4004/odata/v4/employee/Employees?$top=4
+Authorization: Basic gopi:
+
+### Next 10 Employees (page 2)
+GET http://localhost:4004/odata/v4/employee/Employees?$top=10&$skip=3
+
+### Sort by Employee Name (ascending)
+GET http://localhost:4004/odata/v4/employee/Employees?$orderby=NODE_KEY desc
+
+
+### Get Departments
+GET http://localhost:4004/odata/v4/employee/Departments
+Authorization: Basic gopi:
+
+### Get Employees based on Filter (EmpEmail)
+### Note: Use single quotes around string values in OData queries
+GET http://localhost:4004/odata/v4/employee/Employees?$filter=EmpEmail eq 'gopi@gmail.com'
+Authorization: Basic gopi:
+### Get Employee by ID with expanded Department
+GET http://localhost:4004/odata/v4/employee/Employees('14A6C829-854D-4CAC-A836-290140F343C4')?$expand=DEP_GUID
+Authorization: Basic gopi:
+
+### Get All Employees with expanded Departments
+GET http://localhost:4004/odata/v4/employee/Employees?$expand=DEP_GUID
+Authorization: Basic gopi:
+
+### Get Department with its Employees
+### in the emp_model.js file the DeptEmpList navigation property is defined
+### to link Departments to Employees
+###   DeptEmpList : Association to many Employees
+###   on DeptEmpList.EmpDeptID = $self; if remove this line and above line then it will not work
+###   DeptEmpList : Association to many Employees
+### this is Scenario of  Requiring Reverse Association
+GET http://localhost:4004/odata/v4/employee/Departments('3FF55EA6-975F-4C2B-9AE6-F78726A6FE03')?$expand=DeptEmpList
+
+### Get all Departments with their Employees
+GET http://localhost:4004/odata/v4/employee/Departments?$expand=DeptEmpList
+
+### Post new Employee
+POST http://localhost:4004/odata/v4/employee/Employees
+Content-Type: application/json
+Authorization: Basic gopi:
+
+{
+  "EmpName": "salman kumar",
+  "EmpLevel": "Mid-Emp",
+  "EmpDOJ": "2012-03-15",
+  "EmpEmail": "salmankumar@gmail.com",
+  "EmpPhone": "8135674567",
+  "DEP_GUID_NODE_KEY": "D17297A2-1553-4DA3-A8AF-3EBD41B1C205",
+  "createdAt": "2025-09-22T04:20:22.989Z",
+  "createdBy": "anonymous",
+  "modifiedAt": "2025-09-22T04:20:22.989Z",
+  "modifiedBy": "anonymous"
+}
+
+### Delete Employee by ID
+DELETE http://localhost:4004/odata/v4/employee/Employees('3A6FD418-B74F-4406-8381-5C72A7479E104')
+
+### Update Employee by ID
+PUT http://localhost:4004/odata/v4/EmployeeService/Employees/382E49D7-A740-46E6-A9CF-B3EEAF57B12B
+Content-Type: application/json
+
+{
+  "EmpName": "jagan Kumar Yadav",
+  "EmpLevel": "Senior-Emp",
+  "EmpDOJ": "2020-10-10",
+  "EmpEmail": "jagan@gmail.com",
+  "EmpPhone": "812838388332",
+  "DEP_GUID_NODE_KEY": "9F8A0C6B-EC35-4654-BA6C-9A8FF97AC204",
+  "createdAt": "2017-09-22T04:20:22.989Z",
+  "createdBy": "anonymous",
+  "modifiedAt": "2025-09-22T04:22:22.989Z",
+  "modifiedBy": "admin"
+}
+
+### Partial Update Employee by ID
+### Replace <ID_VALUE> with actual Employee ID
+PATCH http://localhost:4004/odata/v4/employee/Employees/382E49D7-A740-46E6-A9CF-B3EEAF57B12B
+Content-Type: application/json
+
+{
+  "EmpLevel": "Lead-Emp",
+  "EmpPhone": "8136409263"
+}
+
+# ###Trigger the action
+# POST http://localhost:4004/odata/v4/employee/Employees/14A6C829-854D-4CAC-A836-290140F343C4/Employees.hikeSalary
+# Content-Type: application/json
+# Authorization: Basic gopi:
+
+# {}
+
+###
+POST http://localhost:4004/odata/v4/employee/Employees/6FF5A041-15E5-49C0-BCE2-0E738D50AF42/hikeSalary
+Content-Type: application/json
+Authorization: Basic gopi:
+
+{}
+
+### Trigger the function
+GET http://localhost:4004/odata/v4/employee/empHighSalary()
+Authorization: Basic gopi:
+
+
