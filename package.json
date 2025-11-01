@@ -8,16 +8,18 @@
   "dependencies": {
     "@cap-js/hana": "^1",
     "@sap/cds": "^8",
-    "@sap/xssec": "^4",
+    "@sap/xssec": "^4.11.0",
     "express": "^4"
   },
   "devDependencies": {
     "@cap-js/cds-types": "^0.10.0",
     "@cap-js/sqlite": "^1.11.1",
-    "@sap/cds-dk": "^8"
+    "@sap/cds-dk": "^8",
+    "cds-plugin-ui5": "^0.13.0"
   },
   "scripts": {
-    "start": "cds-serve"
+    "start": "cds-serve",
+    "watch-manageempdpt": "cds watch --open manageempdpt/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "cds": {
     "requires": {
@@ -35,7 +37,10 @@
                 "Admin"
               ],
               "userAttributes": {
-                "EmpLevel": "Mid-Emp"
+                "EmpLevel": [
+                  "Mid-Emp",
+                  "Junior-Emp"
+                ]
               }
             }
           }
@@ -46,5 +51,11 @@
     "sql": {
       "native_hana_associations": false
     }
-  }
+  },
+  "workspaces": [
+    "app/*"
+  ],
+  "sapux": [
+    "app/manageempdpt"
+  ]
 }

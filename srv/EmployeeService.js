@@ -110,4 +110,21 @@ module.exports = cds.service.impl(async function () {
       return "Error occurred" + error.toString();
     }
   });
+  // implementation of the function, gives default date
+  this.on('getEmpDojDefault', async (req,res) => {
+    try {
+     return { EmpDOJ: '2025-10-24' }; // this set default date
+    } catch (error){
+      return "Hey error !"+ error.toString();
+    }
+  });
+  // implementing function for default date of join
+  // when click on button...
+  this.on('setChangeDefaultDOJ', async (req,res)=>{
+    try{
+     return {EmpDOJ: '2021-08-22'};
+    }catch(error){
+      return "hey error"+error.toString();
+    }
+  });
 });

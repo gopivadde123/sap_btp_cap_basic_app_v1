@@ -13,23 +13,35 @@ service EmployeeService @(requires: 'authenticated-user') {
     // - Allowing only users with 'Viewer', 'Editor', or 'Admin' roles to access full CRUD and PATCH operations
     // - Further restricting access so users only see or edit employee records that match their own EmpLevel
     // Using 'projection' helps provide a controlled view instead of the full database schema.
-    entity Employees @(restrict: [{
+    // 'Display','Edit'
+    entity Employees @(
+    odata.draft.enabled: true,
+    Common.DefaultValuesFunction: 'getEmpDojDefault' // this annotaion gives default date by function
+)       @(restrict: [{
         grant: ['*' // Full CRUD and PATCH permissions
         ],
         to   : [
-            'Viewer',
-            // Read-only users
-            'Editor',
-            // Can modify data
-            'Admin' // Full access users
-        ],
-        where: 'EmpLevel = $user.EmpLevel' // Row-level filter: only see/edit employees at the user's level
-    }])                as projection on my.Employees
+           'Display','Edit'
+        ], where: 'EmpLevel = $user.EmpLevel'
+    }])           as projection on my.Employees{
+        *,
+        case DEP_GUID.DeptName
+          when 'IT' then 'Information Technology'
+          when 'HR' then 'Human Resource management'
+          else 'Common Dept'
+                    end as DName: String(10),
+        case DEP_GUID.DeptName
+          when 'IT' then 1
+          when 'HR' then 2
+          else 3
+                    end as IconColor: String(10)
+    }
         actions {
             // Define a custom instance-bound action for employees to increase salary.
             // This action is typically triggered via a user interface on a specific employee record
             // and returns the updated employee entity after the salary hike is applied.
             action hikeSalary() returns Employees;
+            action setChangeDefaultDOJ() returns Employees;
         };
 
     // Expose the Departments entity similarly through a projection,
@@ -39,4 +51,8 @@ service EmployeeService @(requires: 'authenticated-user') {
     // Provide a function to retrieve the employee with the highest salary.
     // Returns a single employee record, useful for dashboards, analytics, or recognition use cases.
     function empHighSalary() returns Employees;
+    // this is gives default date function
+    function getEmpDojDefault() returns Employees;
+    // change default date
+    function setChangeDefaultDOJ() returns Employees;
 }

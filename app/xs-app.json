@@ -1,0 +1,18 @@
+{
+    "welcomeFile": "manageempdpt/webapp/index.html",
+    "authenticationMethod": "route",
+    "sessionTimeout": 100,
+    "routes": [
+        {
+            "source": "^/manageempdpt/webapp/(.*)",
+            "target": "$1",
+            "localDir": "manageempdpt/webapp",
+            "authenticationType": "xsuaa"
+        },
+        {
+            "source": "^/(.*)$",
+            "destination": "srv-api",
+            "authenticationType": "xsuaa"
+        }
+    ]
+}

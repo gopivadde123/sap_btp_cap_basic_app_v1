@@ -1,7 +1,7 @@
 _schema-version: 3.3.0
 ID: my_first_btp_app
 version: 1.0.0
-description: "A simple CAP project."
+description: A simple CAP project.
 parameters:
   enable-parallel-deployments: true
 build-parameters:
@@ -11,6 +11,23 @@ build-parameters:
         - npm ci
         - npx cds build --production
 modules:
+  - name: my_first_btp_app-ui
+    type: nodejs
+    path: app
+    parameters:
+      instances: 1
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm-ci
+    requires:
+      - name: my_first_btp_app-auth
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          strictSSL: true
+          forwardAuthToken: true
+          url: '~{srv-url}'
   - name: my_first_btp_app-srv
     type: nodejs
     path: gen/srv
@@ -20,13 +37,12 @@ modules:
     build-parameters:
       builder: npm-ci
     provides:
-      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+      - name: srv-api
         properties:
-          srv-url: ${default-url}
+          srv-url: '${default-url}'
     requires:
       - name: my_first_btp_app-db
       - name: my_first_btp_app-auth
-
   - name: my_first_btp_app-db-deployer
     type: hdb
     path: gen/db
@@ -34,7 +50,6 @@ modules:
       buildpack: nodejs_buildpack
     requires:
       - name: my_first_btp_app-db
-
 resources:
   - name: my_first_btp_app-db
     type: com.sap.xs.hdi-container
@@ -48,5 +63,5 @@ resources:
       service-plan: application
       path: ./xs-security.json
       config:
-        xsappname: my_first_btp_app-${org}-${space}
+        xsappname: 'my_first_btp_app-${org}-${space}'
         tenant-mode: dedicated
